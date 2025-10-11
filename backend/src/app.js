@@ -2,6 +2,7 @@ import express from "express";
 import { authRoutes } from "./routes/auth.route.js";
 import { messageRoutes } from "./routes/message.route.js";
 import path from "path";
+import cookieParser from "cookie-parser";
 import { connectDB } from "../lib/db.js";
 
 const app = express();
@@ -10,6 +11,7 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // req.body
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
