@@ -1,7 +1,7 @@
 import ActiveTabSwitch from "../components/ActiveTabSwitch";
 import BorderAnimatedContainer from "../components/BorderAnimatedContainer";
 import ChatContainer from "../components/ChatContainer";
-import ChatList from "../components/ChatList";
+import ChatsList from "../components/ChatList";
 import ContactList from "../components/ContactList";
 import NoConversationPlaceholder from "../components/NoConversationPlaceholder";
 import ProfileHeader from "../components/ProfileHeader";
@@ -19,7 +19,7 @@ function ChatPage() {
           <ActiveTabSwitch />
 
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {activeTab === "chats" ? <ChatList /> : <ContactList />}
+            {activeTab === "chats" ? <ChatsList /> : <ContactList />}
           </div>
         </div>
 
