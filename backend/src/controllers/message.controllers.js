@@ -35,6 +35,7 @@ export const getMessagesByUserId = async (req, res) => {
 };
 
 export const sendMessage = async (req, res) => {
+  console.log("hello im in sendMessage");
   try {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
@@ -48,7 +49,7 @@ export const sendMessage = async (req, res) => {
         .status(400)
         .json({ message: "Cannot send messages to yourself." });
     }
-    const receiverExists = await User.exists({ id: receiverId });
+    const receiverExists = await User.exists({ _id: receiverId });
     if (!receiverExists) {
       return res.status(404).json({ message: "Receiver not found." });
     }
@@ -71,7 +72,10 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
     res.status(201).json(newMessage);
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error in sendMessage controller: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 export const getChatPartners = async (req, res) => {
