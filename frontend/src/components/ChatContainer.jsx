@@ -5,6 +5,7 @@ import ChatHeader from "./ChatHeader";
 import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder";
 import MessageInput from "./MessageInput";
 import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton";
+import NotificationListener from "./NotificationListener";
 
 function ChatContainer() {
   const {
@@ -39,6 +40,7 @@ function ChatContainer() {
 
   return (
     <>
+      <NotificationListener />
       <ChatHeader />
       <div className="flex-1 px-6 overflow-y-auto py-8">
         {messages.length > 0 && !isMessagingLoading ? (
