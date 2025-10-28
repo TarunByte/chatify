@@ -4,9 +4,26 @@ import { useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
 function ChatHeader() {
-  const { selectedUser, setSelectedUser } = useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { selectedUser, setSelectedUser, isTyping, setIsTyping } =
+    useChatStore();
+  const { onlineUsers, socket } = useAuthStore();
   const isOnline = onlineUsers.includes(selectedUser._id);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleTyping = ({ senderId, isTyping }) => {
+      if (senderId === selectedUser._id) {
+        setIsTyping(isTyping);
+      }
+    };
+
+    socket.on("userTyping", handleTyping);
+
+    return () => {
+      socket.off("userTyping", handleTyping);
+    };
+  }, [socket, selectedUser]);
 
   useEffect(() => {
     const handleEscKey = (e) => {
@@ -36,7 +53,7 @@ function ChatHeader() {
             {selectedUser.fullName}
           </h3>
           <p className="text-slate-400 text-sm">
-            {isOnline ? "Online" : "Offline"}
+            {isTyping ? "Typing..." : isOnline ? "Online" : "Offline"}
           </p>
         </div>
       </div>

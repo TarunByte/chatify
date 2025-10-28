@@ -5,8 +5,14 @@ import NoChatsFound from "./NoChatsFound";
 import { useAuthStore } from "../store/useAuthStore";
 
 function ChatsList() {
-  const { getMyChatPartners, chats, isUserLoading, setSelectedUser } =
-    useChatStore();
+  const {
+    getMyChatPartners,
+    chats,
+    isUserLoading,
+    setSelectedUser,
+    isTyping,
+    setIsTyping,
+  } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
   useEffect(() => {

@@ -37,8 +37,6 @@ function ChatContainer() {
     }
   });
 
-  useEffect(() => {}, []);
-
   return (
     <>
       <ChatHeader />
