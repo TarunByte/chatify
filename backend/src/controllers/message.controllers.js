@@ -41,6 +41,7 @@ export const sendMessage = async (req, res) => {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
+    const senderName = req.user.fullName;
 
     if (!text && !image) {
       return res.status(400).json({ message: "Text or image is required." });
@@ -65,6 +66,7 @@ export const sendMessage = async (req, res) => {
     const newMessage = new Message({
       senderId,
       receiverId,
+      senderName,
       text,
       image: imageUrl,
       createdAt: new Date().toISOString(),
@@ -73,6 +75,13 @@ export const sendMessage = async (req, res) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
+
+      // 🔔 Send notification event
+      io.to(receiverSocketId).emit("newMessageNotification", {
+        senderId: senderId,
+        senderName: senderName, // agar populate use kar raha hai
+        messageText: newMessage.text,
+      });
     }
 
     await newMessage.save();
