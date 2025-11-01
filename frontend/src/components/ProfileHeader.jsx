@@ -1,7 +1,13 @@
-import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react";
+import {
+  LogOutIcon,
+  VolumeOffIcon,
+  Volume2Icon,
+  UserRoundPen,
+} from "lucide-react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
 
@@ -9,6 +15,7 @@ function ProfileHeader() {
   const { logout, authUser, updateProfile } = useAuthStore();
   const { isSoundEnabled, toggleSound } = useChatStore();
   const [selectedImg, setSelectedImg] = useState(null);
+  const navigate = useNavigate();
 
   const fileInputRef = useRef(null);
 
@@ -37,7 +44,7 @@ function ProfileHeader() {
               onClick={() => fileInputRef.current.click()}
             >
               <img
-                src={selectedImg || authUser.profilePic || "/avatar.png"}
+                src={selectedImg || authUser?.profilePic || "/avatar.png"}
                 alt="User image"
                 className="size-full object-cover"
               />
@@ -58,7 +65,7 @@ function ProfileHeader() {
           {/* USERNAME & ONLINE TEXT */}
           <div>
             <h3 className="text-slate-200 font-medium text-base max-w-[180px] truncate">
-              {authUser.fullName}
+              {authUser?.fullName}
             </h3>
 
             <p className="text-slate-400 text-xs">Online</p>
@@ -68,6 +75,16 @@ function ProfileHeader() {
         {/* BUTTONS */}
         <div className="flex gap-4 items-center">
           {/* LOGOUT BTN */}
+          <button className="text-slate-400 hover:text-slate-200 transition-colors group ">
+            <UserRoundPen
+              className="size-5"
+              onClick={() => navigate("/edit-profile")}
+            />
+            <span className="absolute top-0 left-12 right-0 text-sm text-center hidden group-hover:block transition-all duration-300 ease-in-out">
+              Edit user profile
+            </span>
+          </button>
+
           <button
             className="text-slate-400 hover:text-slate-200 transition-colors"
             onClick={logout}

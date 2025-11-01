@@ -99,23 +99,46 @@ export const logout = async (_, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { profilePic } = req.body;
-    if (!profilePic)
-      return res.status(400).json({ message: "Profile pic is required" });
-
+    const { fullName, profilePic } = req.body;
     const userId = req.user._id;
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    const updateData = {};
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: uploadResponse.secure_url },
-      { new: true }
-    );
+    // if (!profilePic)
+    //   return res.status(400).json({ message: "Profile pic is required" });
 
-    res.status(200).json(updatedUser);
+    if (profilePic) {
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      updateData.profilePic = uploadResponse.secure_url;
+    }
+
+    if (fullName) {
+      updateData.fullName = fullName;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     console.log("error in update profile: ", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+//getEditProfilePage
+export const getEditProfilePage = async (req, res) => {
+  try {
+    if (!req.user) return res.redirect("/");
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).send("User not found");
+
+    res.status(200).json({ name: user.fullName, avatarURL: user.profilePic });
+  } catch (error) {
+    console.error("Error in getEditProfilePage: ", error.message);
   }
 };

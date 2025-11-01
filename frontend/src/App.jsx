@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import PageLoader from "./components/PageLoader";
 import { Toaster } from "react-hot-toast";
 import NotificationListener from "./components/NotificationListener";
+import EditProfilePage from "./pages/EditProfilePage";
 
 function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
@@ -30,6 +31,10 @@ function App() {
         <Route
           path="/"
           element={authUser ? <ChatPage /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/edit-profile"
+          element={authUser ? <EditProfilePage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/login"
